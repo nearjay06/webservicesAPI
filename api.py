@@ -80,17 +80,15 @@ def get_headlines():
     print("Api url", api_url)
     response = requests.get(api_url)
     data=response.json()
+    article_data=data['articles']
     if response.status_code == 200:
-         return json.loads(response.content.decode('utf-8'))
-
-         print(response.content.decode('utf-8'))
+        print("Request successful")
     else:
         return print('Something is wrong')
 
-    for article in data:
-        print("Title : ", article["title"])
-        print("decription : ",'article["description"]')
+    for article in article_data:
+        print("Title : ",article["title"])
+        print("decription : ",article["description"])
         print("url: ",article["url"])
     
-
 get_headlines()
