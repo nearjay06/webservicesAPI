@@ -13,7 +13,7 @@ style = style_from_dict({
     Token.Instruction: '',  # default
     Token.Answer: '#453032 bold',
     Token.Question: '',
-})
+    })
 
 questions = [
     {
@@ -26,69 +26,78 @@ questions = [
                 'name': 'bbc-news'
             },
             {
-                'name': 'CNN'
+                'name': 'cnn'
             },
             {
-                'name': 'ALJAZEERA'
+                'name': 'al-jazeera-english'
             },
             Separator('= News ='),
             {
-                'name': 'CNN',
-                'checked': True
+                'name': 'financial-post'
             },
             {
-                'name': 'Euronews'
-            },
-            {
-                'name': 'Sky News'
+                'name': 'the-economist'
             },
             Separator('= The usual ='),
             {
-                'name': 'Reuters'
+                'name': 'techcrunch'
             },
             {
-                'name': 'Bloomberg'
+                'name': 'bloomberg'
             },
             {
-                'name': 'NTV'
+                'name': 'entertainment-weekly'
             },
-            Separator('=The extras='),
-            {
-                'name': 'MSNBC'
-            },
-            {'name': 'Fox News',
-                'disabled': 'out of service'
-            },
-            {'name': 'Washington Post'
-
-                },
         ],
-        'validate': lambda answer: 'You must choose at least one news source.'
+        'validate': lambda answer: 'Choose at least one news source.'
         if len(answer) == 0 else True
     }
 ]
 
 
 answers = prompt(questions, style=style)
-# pprint(answers)
-source=answers["news sources"]
+pprint(answers)
+source = answers["news sources"]
 
-def get_headlines():
-    
-    api_url = 'https://newsapi.org/v2/top-headlines?sources='+source+'&pageSize=10&apiKey=479334790e5343abb9a3b43228f4b465'
-    
-    print("Api url", api_url)
-    response = requests.get(api_url)
-    data=response.json()
-    article_data=data['articles']
-    if response.status_code == 200:
-        print("Request successful")
-    else:
-        return print('Something is wrong')
 
-    for article in article_data:
-        print("Title : ",article["title"])
-        print("decription : ",article["description"])
-        print("url: ",article["url"])
-    
-get_headlines()
+class NewsSources:
+    # def __init__(self):
+    #     pass
+
+    def get_headlines(self):
+        source = answers["news sources"]
+        api_url = 'https://newsapi.org/v2/top-headlines?sources=' + \
+            source+'&apiKey=479334790e5343abb9a3b43228f4b465&pageSize=10'
+
+        
+        # response = requests.get(api_url)
+
+        # data = response.json()
+
+        print("Api url", api_url)
+        response = requests.get(api_url)
+        data=response.json()           
+
+
+        article_data = data['articles']
+        if response.status_code == 200:
+            print("Request Successful")
+        else:
+            print("Request Unsuccessful")
+
+        for article in article_data:
+            print("Title: ", article["title"])
+            print("description: ", article["description"])
+            print("url: ", article["url"])
+
+        return response.status_code,article_data
+
+    # def addnumbers(self, a, b):
+    #     return a+b
+
+
+
+news_sources = NewsSources()
+print(news_sources.get_headlines())
+
+
